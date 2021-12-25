@@ -59,7 +59,7 @@ while True:
         end_time = start_time + datetime.timedelta(days=1) #9:00시 +1일
 
         if start_time < now < end_time - datetime.timedelta(seconds=10): #8시59분 50초까지
-            target_price = get_target_price("KRW-BTC", 0.5) #0.5는 K값
+            target_price = get_target_price("KRW-BTC", 0.5)
             current_price = get_current_price("KRW-BTC")
             
             ##JK test
