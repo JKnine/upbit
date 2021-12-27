@@ -84,10 +84,10 @@ while True:
 
 
         print("OVB값 :%d OBV_MA9값:%d" %(OBV[lastnum], OBV_MA9[lastnum]))
-        if OBV_MA9[lastnum] > OBV[lastnum] and flag == 1 and firstcheck == 1:
+        if OBV_MA9[lastnum] > OBV[lastnum]*1.05 and flag == 1 and firstcheck == 1:
             buying_price = pyupbit.get_current_price(best_ticker)
             krw = get_balance("KRW")
-            if krw > 5000 and buying_price > selling_price *0.9 :
+            if krw > 5000 and buying_price < selling_price *0.99 :
                 now = datetime.datetime.now()
                 if firstcheck ==1:
                     upbit.buy_market_order(best_ticker, 10000) #5천원
@@ -104,7 +104,7 @@ while True:
                 print("돈이 없어 끝냄")
                 break
        
-        if OBV_MA9[lastnum] < OBV[lastnum] and flag == 0:
+        if OBV_MA9[lastnum]*1.05 < OBV[lastnum] and flag == 0:
             print("OBV %f OBV_MA9 %f"  %(OBV[lastnum] , OBV_MA9[lastnum]))
             print("현재 가격: ", get_current_price(best_ticker))
             print("매수 가격: ", buying_price)
