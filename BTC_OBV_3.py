@@ -116,7 +116,7 @@ while True:
             if krw > 5000 and pyupbit.get_current_price(best_ticker) < selling_price *0.98 and get_ma5(best_ticker)*1.02 < get_ma20(best_ticker):
                 now = datetime.datetime.now()
                 if firstcheck ==1:
-                    upbit.buy_market_order(best_ticker, 10000) #5천원
+                    upbit.buy_market_order(best_ticker, 20000) #5천원
                     print("매수시점 시간:")
                     print(now)
                     print("매수시점 OBV %f OBV_MA9 %f"  %(OBV[lastnum] , OBV_MA9[lastnum]))
