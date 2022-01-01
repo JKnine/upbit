@@ -63,8 +63,8 @@ OBV = []
 OBV_MA9 = []
 flag = 0
 firstcheck = 0
-best_ticker = "KRW-MATIC"
-best_tiker_name ="MATIC" # get balance check 할때
+best_ticker = "KRW-XRP"
+best_tiker_name ="XRP" # get balance check 할때
 
 #AI 모듈
 predicted_close_price = 0
