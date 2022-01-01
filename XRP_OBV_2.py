@@ -11,6 +11,13 @@ import numpy as np
 access = "ywpr0uZlxxwTBoQOWZBLmlximfwDg3gCxspqQYLu"
 secret = "QPSrajvJBK5WFQwhTMhkhY5xEVkCEaUE0G2lHjXy"
 
+OBV = []
+OBV_MA9 = []
+flag = 0
+firstcheck = 0
+best_ticker = "KRW-XRP"
+best_tiker_name ="XRP" # get balance check 할때
+
 def get_target_price(ticker, k):
     """변동성 돌파 전략으로 매수 목표가 조회"""
     df = pyupbit.get_ohlcv(ticker, interval="day", count=2)
