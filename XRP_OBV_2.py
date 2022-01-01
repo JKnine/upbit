@@ -4,8 +4,6 @@ import datetime
 #import schedule
 #import Prophet
 
-from fbprophet import Prophet
-
 import pandas as pd
 import numpy as np
 
@@ -65,29 +63,6 @@ flag = 0
 firstcheck = 0
 best_ticker = "KRW-XRP"
 best_tiker_name ="XRP" # get balance check 할때
-
-#AI 모듈
-predicted_close_price = 0
-def predict_price(ticker):
-    """Prophet으로 당일 종가 가격 예측"""
-    df2 = pyupbit.get_ohlcv(best_ticker, interval="minute60")
-    df2 = df2.reset_index()
-    df2['ds'] = df2['index']
-    df2['y'] = df2['close']
-    data = df2[['ds','y']]
-    model = Prophet()
-    model.fit(data)
-    future = model.make_future_dataframe(periods=24, freq='H')
-    forecast = model.predict(future)
-    closeDf = forecast[forecast['ds'] == forecast.iloc[-1]['ds'].replace(hour=9)]
-    if len(closeDf) == 0:
-        closeDf = forecast[forecast['ds'] == data.iloc[-1]['ds'].replace(hour=9)]
-    closeValue = closeDf['yhat'].values[0]
-    predicted_close_price = closeValue
-    return predicted_close_price
-
-#predict_price(best_ticker)
-#schedule.every().hour.do(lambda: predict_price(best_ticker))
 
 
 # 자동매매 시작
@@ -149,8 +124,8 @@ while True:
 
 
         krw = get_balance("KRW")
-        print("Flag상태:%d firstcheck상태:%d 잔액:%d " %(flag, firstcheck, krw))
-        print("MA5:%d MA20:%d " %(get_ma5(best_ticker),get_ma20(best_ticker)))
+        #print("Flag상태:%d firstcheck상태:%d 잔액:%d " %(flag, firstcheck, krw))
+        #print("MA5:%d MA20:%d " %(get_ma5(best_ticker),get_ma20(best_ticker)))
 
         time.sleep(1)
 
