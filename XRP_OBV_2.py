@@ -11,7 +11,6 @@ import numpy as np
 access = "ywpr0uZlxxwTBoQOWZBLmlximfwDg3gCxspqQYLu"
 secret = "QPSrajvJBK5WFQwhTMhkhY5xEVkCEaUE0G2lHjXy"
 
-
 def get_target_price(ticker, k):
     """변동성 돌파 전략으로 매수 목표가 조회"""
     df = pyupbit.get_ohlcv(ticker, interval="day", count=2)
@@ -51,18 +50,22 @@ def get_ma20(ticker):
     ma20 = df['close'].rolling(20).mean().iloc[-1]
     return ma20
 
+def get_ma35(ticker):
+    """35일 이동 평균선 조회"""
+    df = pyupbit.get_ohlcv(ticker, interval="minute1", count=35)
+    ma35 = df['close'].rolling(35).mean().iloc[-1]
+    return ma35
+
+def get_ma100(ticker):
+    """35일 이동 평균선 조회"""
+    df = pyupbit.get_ohlcv(ticker, interval="minute1", count=100)
+    ma100 = df['close'].rolling(100).mean().iloc[-1]
+    return ma100
 
 # 로그인
 upbit = pyupbit.Upbit(access, secret)
 print("autotrade start")
 buying_price = 0
-
-OBV = []
-OBV_MA9 = []
-flag = 0
-firstcheck = 0
-best_ticker = "KRW-XRP"
-best_tiker_name ="XRP" # get balance check 할때
 
 
 # 자동매매 시작
@@ -86,26 +89,27 @@ while True:
 
 
         print("OVB값 :%d OBV_MA9값:%d" %(OBV[lastnum], OBV_MA9[lastnum]))
-        if OBV_MA9[lastnum] > OBV[lastnum]*1.05 and flag == 1 and firstcheck == 1:
+        if OBV_MA9[lastnum] > OBV[lastnum]*1.03 and flag == 1 and firstcheck == 1:
             krw = get_balance("KRW")
+            print("1차 매수조건 pass")
             #print("current price: %d selling price:%d" %(pyupbit.get_current_price(best_ticker),selling_price))
             
             if selling_price == 0:
-                if krw > 5000 and get_ma5(best_ticker)*1.02 < get_ma30(best_ticker) and firstcheck ==1:
-                    #upbit.buy_market_order(best_ticker, 10000) #5천원
+                if krw > 5000 and get_ma5(best_ticker)*1.01 < get_ma100(best_ticker) and firstcheck ==1:
+                    upbit.buy_market_order(best_ticker, 10000) #5천원
                     flag =0
                     buying_price = pyupbit.get_current_price(best_ticker)
                     print("매수시점 가격: %f" %buying_price)
                     time.sleep(60)
                 
-            elif krw > 5000 and pyupbit.get_current_price(best_ticker) < selling_price *0.98 and get_ma5(best_ticker)*1.02 < get_ma20(best_ticker):
+            elif krw > 5000 and pyupbit.get_current_price(best_ticker) < selling_price *0.98 and get_ma5(best_ticker) < get_ma100(best_ticker):
                 if firstcheck ==1:
-                    #upbit.buy_market_order(best_ticker, 10000) #5천원
+                    upbit.buy_market_order(best_ticker, 10000) #5천원
                     print("만원 매수함")
                     flag =0
                     buying_price = pyupbit.get_current_price(best_ticker)
                     print("매수시점 가격: %f" %buying_price)
-                    time.sleep(60)
+                    time.sleep(10)
 
             if krw <5000:
                 print("돈이 없어 끝냄")
@@ -115,24 +119,24 @@ while True:
             print("OBV %f OBV_MA9 %f"  %(OBV[lastnum] , OBV_MA9[lastnum]))
             print("현재 가격: ", get_current_price(best_ticker))
             print("매수 가격: ", buying_price)
-            if get_current_price(best_ticker) > buying_price*1.5:
+            if get_current_price(best_ticker) > buying_price*1.05:
                 current_balance = get_balance(best_tiker_name)
                 print(current_balance)
-                #upbit.sell_market_order(best_ticker, current_balance * 0.995) #약 5천원
-                print("매도")
+                upbit.sell_market_order(best_ticker, current_balance * 0.995) #약 5천원
+                #print("매도")
                 flag = 1
                 selling_price = pyupbit.get_current_price(best_ticker)
-                print("매도시점 가격: ", selling_price)
-                #time.sleep(60)
+                #print("매도시점 가격: ", selling_price)
+                time.sleep(20)
             firstcheck = 1
             print("매수전 준비완료")
 
 
         krw = get_balance("KRW")
-        print("Flag상태:%d firstcheck상태:%d 잔액:%d " %(flag, firstcheck, krw))
-        print("MA5:%d MA20:%d " %(get_ma5(best_ticker),get_ma20(best_ticker)))
+        #print("Flag상태:%d firstcheck상태:%d 잔액:%d " %(flag, firstcheck, krw))
+        #print("MA5:%d MA100:%d " %(get_ma5(best_ticker),get_ma100(best_ticker)))
 
-        time.sleep(1)
+        time.sleep(5)
 
         if krw < 5000:
             break
