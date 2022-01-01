@@ -11,6 +11,12 @@ import numpy as np
 access = "ywpr0uZlxxwTBoQOWZBLmlximfwDg3gCxspqQYLu"
 secret = "QPSrajvJBK5WFQwhTMhkhY5xEVkCEaUE0G2lHjXy"
 
+OBV = []
+OBV_MA9 = []
+flag = 0
+firstcheck = 0
+best_ticker = "KRW-LINK"
+best_tiker_name ="LINK" # get balance check 할때
 
 def get_target_price(ticker, k):
     """변동성 돌파 전략으로 매수 목표가 조회"""
@@ -56,13 +62,6 @@ def get_ma20(ticker):
 upbit = pyupbit.Upbit(access, secret)
 print("autotrade start")
 buying_price = 0
-
-OBV = []
-OBV_MA9 = []
-flag = 0
-firstcheck = 0
-best_ticker = "KRW-LINK"
-best_tiker_name ="LINK" # get balance check 할때
 
 
 # 자동매매 시작
