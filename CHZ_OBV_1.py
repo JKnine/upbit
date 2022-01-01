@@ -71,6 +71,7 @@ while True:
         df = [0]
         OBV = []
         OBV_MA9 = []
+        #predict_price(best_ticker)
         df = pyupbit.get_ohlcv(best_ticker, interval ="minute1", count =200) #7일 동안의 데이터를 불러오는것
      
         for i in range(1, len(df.close)):
@@ -87,13 +88,19 @@ while True:
         print("OVB값 :%d OBV_MA9값:%d" %(OBV[lastnum], OBV_MA9[lastnum]))
         if OBV_MA9[lastnum] > OBV[lastnum]*1.05 and flag == 1 and firstcheck == 1:
             krw = get_balance("KRW")
-            if krw > 5000 and pyupbit.get_current_price(best_ticker) < selling_price *0.98 and get_ma5(best_ticker)*1.02 < get_ma20(best_ticker):
-                now = datetime.datetime.now()
+            #print("current price: %d selling price:%d" %(pyupbit.get_current_price(best_ticker),selling_price))
+            
+            if selling_price == 0:
+                if krw > 5000 and get_ma5(best_ticker)*1.02 < get_ma30(best_ticker) and firstcheck ==1:
+                    #upbit.buy_market_order(best_ticker, 10000) #5천원
+                    flag =0
+                    buying_price = pyupbit.get_current_price(best_ticker)
+                    print("매수시점 가격: %f" %buying_price)
+                    time.sleep(60)
+                
+            elif krw > 5000 and pyupbit.get_current_price(best_ticker) < selling_price *0.98 and get_ma5(best_ticker)*1.02 < get_ma20(best_ticker):
                 if firstcheck ==1:
-                    upbit.buy_market_order(best_ticker, 10000) #5천원
-                    print("매수시점 시간:")
-                    print(now)
-                    print("매수시점 OBV %f OBV_MA9 %f"  %(OBV[lastnum] , OBV_MA9[lastnum]))
+                    #upbit.buy_market_order(best_ticker, 10000) #5천원
                     print("만원 매수함")
                     flag =0
                     buying_price = pyupbit.get_current_price(best_ticker)
@@ -111,20 +118,19 @@ while True:
             if get_current_price(best_ticker) > buying_price*1.5:
                 current_balance = get_balance(best_tiker_name)
                 print(current_balance)
-                upbit.sell_market_order(best_ticker, current_balance * 0.995) #약 5천원
+                #upbit.sell_market_order(best_ticker, current_balance * 0.995) #약 5천원
                 print("매도")
                 flag = 1
                 selling_price = pyupbit.get_current_price(best_ticker)
                 print("매도시점 가격: ", selling_price)
-                time.sleep(60)
+                #time.sleep(60)
             firstcheck = 1
-            selling_price = pyupbit.get_current_price(best_ticker)
             print("매수전 준비완료")
 
 
         krw = get_balance("KRW")
-        #print("Flag상태:%d firstcheck상태:%d 잔액:%d " %(flag, firstcheck, krw))
-        #print("MA5:%d MA20:%d " %(get_ma5(best_ticker),get_ma20(best_ticker)))
+        print("Flag상태:%d firstcheck상태:%d 잔액:%d " %(flag, firstcheck, krw))
+        print("MA5:%d MA20:%d " %(get_ma5(best_ticker),get_ma20(best_ticker)))
 
         time.sleep(1)
 
