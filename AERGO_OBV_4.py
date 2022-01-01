@@ -64,8 +64,8 @@ OBV_MA9 = []
 flag = 0
 firstcheck = 0
 
-best_ticker = "KRW-ETH"
-best_tiker_name ="ETH" # get balance check 할때
+best_ticker = "KRW-AERGO"
+best_tiker_name ="AERGO" # get balance check 할때
 
 #AI 모듈
 predicted_close_price = 0
