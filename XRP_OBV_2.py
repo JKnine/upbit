@@ -109,7 +109,7 @@ while True:
                     print("매수시점 가격: %f" %buying_price)
                     time.sleep(60)
                 
-            elif krw > 5000 and pyupbit.get_current_price(best_ticker) < selling_price *0.98 and get_ma5(best_ticker) < get_ma100(best_ticker):
+            elif krw > 5000 and pyupbit.get_current_price(best_ticker) < selling_price *0.98 and pyupbit.get_current_price(best_ticker) < get_ma100(best_ticker)*0.99:
                 if firstcheck ==1:
                     upbit.buy_market_order(best_ticker, 10000) #5천원
                     print("만원 매수함")
